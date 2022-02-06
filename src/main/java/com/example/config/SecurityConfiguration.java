@@ -30,7 +30,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()   //首先需要配置哪些请求会被拦截，哪些请求必须具有什么角色才能访问
                 .antMatchers("/static/**").permitAll()    //静态资源，使用permitAll来运行任何人访问（注意一定要放在前面）
-                .antMatchers("/**").hasRole("user")     //所有请求必须登陆并且是user角色才可以访问（不包含上面的静态资源）
+                .antMatchers("/index").hasAnyRole("user", "admin")   //index页面可以由user或admin访问
+                .anyRequest().hasRole("admin")   //除了上面以外的所有内容，只能是admin访问
                 .and()
                 .formLogin()       //配置Form表单登陆
                 .loginPage("/login")       //登陆页面地址（GET）
