@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageController {
 
     @RequestMapping("/index")
-    public String login(){
+    public String index(){
         return "index";
+    }
+
+    @RequestMapping("/login")
+    public String login(){
+        return "login";
     }
 }
