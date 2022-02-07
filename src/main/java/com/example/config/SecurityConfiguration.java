@@ -1,5 +1,7 @@
 package com.example.config;
 
+import com.example.entity.AuthUser;
+import com.example.mapper.UserMapper;
 import com.example.service.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,12 +10,19 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +31,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Resource
     UserAuthService service;
+
+    @Resource
+    UserMapper mapper;
 
     @Resource
     PersistentTokenRepository repository;
@@ -52,7 +64,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()       //配置Form表单登陆
                 .loginPage("/login")       //登陆页面地址（GET）
                 .loginProcessingUrl("/doLogin")    //form表单提交地址（POST）
-                .defaultSuccessUrl("/index")    //登陆成功后跳转的页面，也可以通过Handler实现高度自定义
+                //.defaultSuccessUrl("/index")    //登陆成功后跳转的页面，也可以通过Handler实现高度自定义
+                .successHandler(this::onAuthenticationSuccess)
                 .permitAll()    //登陆页面也需要允许所有人访问
                 .and()
                 .logout()
@@ -64,5 +77,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .rememberMeParameter("remember")
                 .tokenRepository(repository)
                 .tokenValiditySeconds(60 * 60 * 24 * 7);  //Token的有效时间（秒）默认为14天;
+    }
+
+    private void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+        HttpSession session = httpServletRequest.getSession();
+        AuthUser user = mapper.getPasswordByUsername(authentication.getName());
+        session.setAttribute("user",user);
+        httpServletResponse.sendRedirect("/book/index");
     }
 }
