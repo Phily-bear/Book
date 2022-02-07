@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.controller.api;
 
 import com.example.service.AuthService;
 import org.springframework.stereotype.Controller;

@@ -58,8 +58,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()   //首先需要配置哪些请求会被拦截，哪些请求必须具有什么角色才能访问
                 .antMatchers("/static/**","/doLogin","/login","/register","/doRegister").permitAll()    //静态资源，使用permitAll来运行任何人访问（注意一定要放在前面）
-                .antMatchers("/index").hasAnyRole("user", "admin")   //index页面可以由user或admin访问
-                .anyRequest().hasRole("admin")   //除了上面以外的所有内容，只能是admin访问
+                .antMatchers("/page/admin/**").hasAnyRole("admin")
+                .antMatchers("/page/user/**").hasAnyRole("user")
+                .anyRequest().hasAnyRole("user","admin")
                 .and()
                 .formLogin()       //配置Form表单登陆
                 .loginPage("/login")       //登陆页面地址（GET）
@@ -83,6 +84,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         HttpSession session = httpServletRequest.getSession();
         AuthUser user = mapper.getPasswordByUsername(authentication.getName());
         session.setAttribute("user",user);
-        httpServletResponse.sendRedirect("/book/index");
+        if (user.getRole().equals("user"))   httpServletResponse.sendRedirect("/book/page/user/index");
+        else   httpServletResponse.sendRedirect("/book/page/admin/index");
+
     }
 }

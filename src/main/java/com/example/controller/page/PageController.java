@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.controller.page;
 
 import com.example.entity.AuthUser;
 import com.example.mapper.UserMapper;
@@ -18,20 +18,20 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class PageController {
 
-    @Resource
-    UserMapper mapper;
-
-    @RequestMapping("/index")
-    public String index(HttpSession session, Model model){
-        AuthUser user =(AuthUser) session.getAttribute("user");
-        if (user==null){
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            user = mapper.getPasswordByUsername(authentication.getName());
-            session.setAttribute("user",user);
-        }
-        model.addAttribute("user",user);
-        return "index";
-    }
+//    @Resource
+//    UserMapper mapper;
+//
+//    @RequestMapping("/index")
+//    public String index(HttpSession session, Model model){
+//        AuthUser user =(AuthUser) session.getAttribute("user");
+//        if (user==null){
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            user = mapper.getPasswordByUsername(authentication.getName());
+//            session.setAttribute("user",user);
+//        }
+//        model.addAttribute("user",user);
+//        return "index";
+//    }
 
     @RequestMapping("/login")
     public String login(){
