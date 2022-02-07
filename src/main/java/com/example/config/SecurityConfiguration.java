@@ -45,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()   //首先需要配置哪些请求会被拦截，哪些请求必须具有什么角色才能访问
-                .antMatchers("/static/**","/doLogin","/login").permitAll()    //静态资源，使用permitAll来运行任何人访问（注意一定要放在前面）
+                .antMatchers("/static/**","/doLogin","/login","/register","/doRegister").permitAll()    //静态资源，使用permitAll来运行任何人访问（注意一定要放在前面）
                 .antMatchers("/index").hasAnyRole("user", "admin")   //index页面可以由user或admin访问
                 .anyRequest().hasRole("admin")   //除了上面以外的所有内容，只能是admin访问
                 .and()

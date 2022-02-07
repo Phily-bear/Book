@@ -3,9 +3,21 @@ package com.example.initializer;
 import com.example.config.MvcConfiguration;
 import com.example.config.RootConfiguration;
 import com.example.config.SecurityConfiguration;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
 public class MvcInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        servletContext.addFilter("characterEncodingFilter",new CharacterEncodingFilter("UTF-8",true))
+                .addMappingForUrlPatterns(null,false,"/*");
+        super.onStartup(servletContext);
+    }
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -21,4 +33,5 @@ public class MvcInitializer extends AbstractAnnotationConfigDispatcherServletIni
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }
+
 }
