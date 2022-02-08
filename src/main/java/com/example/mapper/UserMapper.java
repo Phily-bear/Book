@@ -15,4 +15,8 @@ public interface UserMapper {
 
     @Insert("insert into student(uid,name,sex,grade) values(#{uid},#{name},#{sex},#{grade})")
     int addStudent(@Param("uid") int uid,@Param("name") String name,@Param("sex") String sex,@Param("grade") String grade);
+
+    @Select("select sid from student where uid=#{uid}")
+    Integer getSidByUid(int uid);
+
 }
