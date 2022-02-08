@@ -4,6 +4,7 @@ import com.example.entity.AuthUser;
 import com.example.mapper.UserMapper;
 import com.example.service.AuthService;
 import com.example.service.BookService;
+import com.example.service.StatService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,9 +27,14 @@ public class AdminPageController {
     @Resource
     BookService bookService;
 
+    @Resource
+    StatService statService;
+
     @RequestMapping("/index")
     public String index(HttpSession session, Model model){
         model.addAttribute("user",service.findUser(session));
+        model.addAttribute("borrowList",bookService.getBorrowDetails());
+        model.addAttribute("stat",statService.globalState());
         return "admin/index";
     }
 

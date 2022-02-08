@@ -2,6 +2,7 @@ package com.example.service.impl;
 
 import com.example.entity.Book;
 import com.example.entity.Borrow;
+import com.example.entity.BorrowDetails;
 import com.example.mapper.BookMapper;
 import com.example.mapper.UserMapper;
 import com.example.service.BookService;
@@ -67,6 +68,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public void returnBook(int bid) {
         mapper.returnBook(bid);
+    }
+
+    @Override
+    public List<BorrowDetails> getBorrowDetails() {
+        return mapper.getBorrowDetailsList();
     }
 
 
